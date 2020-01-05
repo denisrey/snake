@@ -1,0 +1,16 @@
+.cell {
+    border-left: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+}
+
+.cell-food {
+    border-left: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    background-color: blue;
+  }
+
+.cell-snake {
+    border-left: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    background-color: orange;
+  }

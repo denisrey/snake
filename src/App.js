@@ -23,17 +23,8 @@ class App extends Component {
     gameStatus: gameStatus.NOTSTARTED,
   }
 
-  createStartingCells() {
-    const cells = []
-    console.log(this.numberOfCells);
-    for (let i=0; i<this.numberOfCells;i++) {
-      cells.push(<Cell cellSize={this.props.cellSize}/>)
-    }
-    return cells;
-  }
-
-  componentWillMount() {
-    this.setState({cells: this.createStartingCells()})
+  setStartingCells = (cells) => {
+    this.setState({cells: cells});
   }
 
   componentDidMount() {
@@ -51,18 +42,23 @@ class App extends Component {
   }
 
   startGame = () => {
-
+    //setTimeout
+    //setHeadofSnake
+    //setFirstFruit
   }
   
   render() {
-
 
   return (
     <div className="App">
       <Panel 
         clicked={this.startGameButtonHandler} 
         gameStatus={this.state.gameStatus}/>
-      <Grid width={this.width} height={this.height}>
+      <Grid width={this.width} 
+        height={this.height} 
+        numberOfCells={this.numberOfCells} 
+        setStartingCells={this.setStartingCells}
+        cellSize={this.props.cellSize}>
         {this.state.cells}
       </Grid>
     </div>
