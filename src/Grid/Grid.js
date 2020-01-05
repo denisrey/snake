@@ -11,10 +11,16 @@ const Grid = (props) => {
     const createStartingCells = () => {
         const cells = []
         for (let i=0; i<props.numberOfCells;i++) {
-          cells.push(<Cell cellSize={props.cellSize} key={i}/>)
+          cells.push(<Cell cellSize={props.cellSize} className={"cell"} key={i}/>)
         }
         return cells;
     }
+
+    const renderNewGrid = () => {
+        console.log("is this called during each change?");
+    }
+
+    renderNewGrid()
 
     return (
       <div className="grid" style={{width: props.width + "px", height: props.height + "px"}}>

@@ -42,6 +42,10 @@ class App extends Component {
   }
 
   startGame = () => {
+    const cells = [...this.state.cells];
+    const index = Math.ceil(Math.random() * this.numberOfCells);
+    cells[index] = <Cell cellSize={this.props.cellSize} className={"cell-food"} key={index}/>
+    this.setState({cells: cells})
     //setTimeout
     //setHeadofSnake
     //setFirstFruit

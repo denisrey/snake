@@ -3,7 +3,7 @@ import './Cell.css';
 
 const cell = props => {
     return (
-        <div className="cell" 
+        <div className={props.className} 
             style={{height: props.cellSize + "px", width:props.cellSize + "px"}}>
         </div>
     )
