@@ -1,4 +1,5 @@
 import React from 'react';
+import './Panel.css';
 
 const panel = props => {
     const text = props.gameStatus;
