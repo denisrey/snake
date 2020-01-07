@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './App.css';
 import Grid from './Grid/Grid';
 import Panel from './Panel/Panel';
@@ -20,7 +20,7 @@ class App extends Component {
   }
   getRandomAndFreeCellIndex = (snake) => {
     const allCellIndexes = [];
-    for (let i=0; i<this.numberOfCells-1;i++) {
+    for (let i = 0; i < this.numberOfCells - 1; i++) {
       allCellIndexes.push(i);
     }
     const freeCellsIndexes = allCellIndexes.filter(n => !snake.includes(n));
@@ -33,10 +33,10 @@ class App extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener("keydown", this.keyeventHandler)
+    window.addEventListener("keydown", this.keyEventHandler)
   }
 
-  keyeventHandler = (event) => {
+  keyEventHandler = (event) => {
     this.lastKeyEvent = event.key;
   }
 
@@ -44,7 +44,7 @@ class App extends Component {
     if (this.state.gameStatus !== gameStatus.RUNNING) {
       this.startGame();
     }
-    this.setState({gameStatus: gameStatus.RUNNING})
+    this.setState({ gameStatus: gameStatus.RUNNING })
   }
 
   startGame = () => {
@@ -53,20 +53,20 @@ class App extends Component {
       food: this.getRandomAndFreeCellIndex([]),
       gameStatus: gameStatus.RUNNING
     });
-    this.interval = setInterval(this.gameLoop, 120)
+    this.interval = setInterval(this.gameLoop, 125)
   }
 
   isSnakeHittingBorder = (snake, newPosition) => {
     const currentPosition = snake[0]
     if (newPosition < 0
-      || (currentPosition % this.props.cellsPerRow === this.props.cellsPerRow - 1 
-        && newPosition === currentPosition + 1) //right border
-      || (currentPosition % this.props.cellsPerRow === 0 && newPosition === currentPosition - 1) //walking right
+      || (currentPosition % this.props.cellsPerRow === this.props.cellsPerRow - 1
+        && newPosition === currentPosition + 1)
+      || (currentPosition % this.props.cellsPerRow === 0 && newPosition === currentPosition - 1)
       || newPosition >= this.numberOfCells) {
-        return true;
-      } else {
-        return false;
-      }
+      return true;
+    } else {
+      return false;
+    }
   }
 
   isSnakeHittingSnake = (snake, newPosition) => {
@@ -74,7 +74,7 @@ class App extends Component {
   }
 
   getNextPosition = (snake) => {
-    switch(this.lastKeyEvent) {
+    switch (this.lastKeyEvent) {
       case "ArrowUp": {
         return snake[0] - this.props.cellsPerRow;
       }
@@ -97,15 +97,15 @@ class App extends Component {
     if (snake.length === 0) {
       return;
     } else if (snake.length === 1) {
-        const oldTail = snake[0];
-        snake[0] = newPosition;
+      const oldTail = snake[0];
+      snake[0] = newPosition;
       return oldTail;
     } else {
-        const oldTail = snake[snake.length - 1];
-        snake.pop();
-        snake.splice(0,0,newPosition);
-        snake[0] = newPosition;
-        return oldTail;
+      const oldTail = snake[snake.length - 1];
+      snake.pop();
+      snake.splice(0, 0, newPosition);
+      snake[0] = newPosition;
+      return oldTail;
     }
   }
 
@@ -125,31 +125,31 @@ class App extends Component {
       if (newPosition === this.state.food) {
         this.eatFood(snake, oldTail);
       }
-      this.setState({snake: snake})
+      this.setState({ snake: snake })
     } else {
       //Game Over
-      this.setState({gameStatus: gameStatus.ENDED});
+      this.setState({ gameStatus: gameStatus.ENDED });
       clearInterval(this.interval);
     }
-    
+
   }
-  
+
   render() {
 
-  return (
-    <div className="App">
-      <Panel 
-        clicked={this.startGameButtonHandler} 
-        gameStatus={this.state.gameStatus}/>
-      <Grid width={this.width} 
-        height={this.height} 
-        numberOfCells={this.numberOfCells}
-        cellSize={this.props.cellSize}
-        snake={this.state.snake}
-        food={this.state.food}>
-      </Grid>
-    </div>
-  );
+    return (
+      <div className="App">
+        <Panel
+          clicked={this.startGameButtonHandler}
+          gameStatus={this.state.gameStatus} />
+        <Grid width={this.width}
+          height={this.height}
+          numberOfCells={this.numberOfCells}
+          cellSize={this.props.cellSize}
+          snake={this.state.snake}
+          food={this.state.food}>
+        </Grid>
+      </div>
+    );
   }
 }
 
