@@ -18,6 +18,7 @@ class App extends Component {
     this.numberOfCells = this.props.cellsPerRow * this.props.cellsPerRow;
     this.lastKeyEvent = null;
   }
+  
   getRandomAndFreeCellIndex = (snake) => {
     const allCellIndexes = [];
     for (let i = 0; i < this.numberOfCells - 1; i++) {
@@ -48,9 +49,16 @@ class App extends Component {
   }
 
   startGame = () => {
+    const snake = this.getRandomAndFreeCellIndex([])
+    const food = this.getRandomAndFreeCellIndex([])
+    const changedGridItems = [
+      {index: food, className: "cell-food"},
+      {index: snake, className: "cell"}
+    ]
     this.setState({
-      snake: [this.getRandomAndFreeCellIndex([])],
-      food: this.getRandomAndFreeCellIndex([]),
+      snake: [snake],
+      food: food,
+      changedGridItems: changedGridItems,
       gameStatus: gameStatus.RUNNING
     });
     this.interval = setInterval(this.gameLoop, 125)
@@ -110,30 +118,43 @@ class App extends Component {
   }
 
   eatFood = (snake, oldTail) => {
-    this.setState({
-      food: this.getRandomAndFreeCellIndex(snake)
-    })
+    const nextFood = this.getRandomAndFreeCellIndex(snake)
     snake.push(oldTail);
+    return nextFood
   }
 
   gameLoop = () => {
+    let changedGridItems = []
+    let newState = {}
+
     const snake = [...this.state.snake];
     const newPosition = this.getNextPosition(snake);
     if (!this.isSnakeHittingBorder(snake, newPosition)
       && !this.isSnakeHittingSnake(snake, newPosition)) {
       const oldTail = this.moveSnake(snake, newPosition)
       if (newPosition === this.state.food) {
-        this.eatFood(snake, oldTail);
+        const nextFood = this.eatFood(snake, oldTail);
+        changedGridItems.push({index: nextFood, className: 'cell-food'})
+        changedGridItems.push({index: this.state.food, className: 'cell'})
+        newState.food = nextFood;
       }
-      this.setState({ snake: snake })
+      changedGridItems.push({index: oldTail, className: 'cell'});
+      changedGridItems.push({index: newPosition, className: 'cell-snake'});
+      newState.snake = snake;
+      newState.changedGridItems = changedGridItems;
+      this.setState(newState)
     } else {
       //Game Over
+      snake.forEach(el =>{
+        changedGridItems.push({index: el, className: 'cell'});
+      })
+      changedGridItems.push({index: this.state.food, className: 'cell'});
       this.setState({
-        gameStatus: gameStatus.ENDED
+        gameStatus: gameStatus.ENDED,
+        changedGridItems: changedGridItems
       });
       clearInterval(this.interval);
     }
-
   }
 
   render() {
@@ -147,8 +168,7 @@ class App extends Component {
           height={this.height}
           numberOfCells={this.numberOfCells}
           cellSize={this.props.cellSize}
-          snake={this.state.snake}
-          food={this.state.food}>
+          changedGridItems={this.state.changedGridItems}>
         </Grid>
       </div>
     );

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import Cell from '../Cell/Cell';
 import './Grid.css';
 
@@ -15,52 +15,23 @@ const Grid = props => {
   }
   const [cells, setCells] = useState([]);
 
-  const prevSnakeRef = useRef();
-  const prevFoodRef = useRef();
-  useEffect(() => {
-    prevSnakeRef.current = props.snake;
-    prevFoodRef.current = props.food;
-  });
-  const prevSnake = prevSnakeRef.current;
-  const prevFood = prevFoodRef.current;
-
   useEffect(() => {
     setCells(createInitialCells());
   }, []);
 
   useEffect(() => {
-    if (typeof (props.snake) === "undefined"
-      || typeof (props.food) === "undefined"
-      || cells.length === 0) {
-      return
-    }
     const localCells = [...cells]
-
-    //paint current snake
-    if (typeof (prevSnake) !== "undefined") {
-      props.snake.filter(n => !prevSnake.includes(n)).forEach((el) => {
-        localCells[el] = <Cell cellSize={props.cellSize} className={"cell-snake"} key={el}/>
+    if (localCells.length !== 0) {
+      props.changedGridItems.forEach((el) => {
+        localCells[el.index] = <Cell cellSize={props.cellSize} className={el.className} key={el.index}/>
       })
-
-      //unpaint old snake minus new snake
-      prevSnake.filter(n => !props.snake.includes(n)).forEach((el) => {
-        localCells[el] = <Cell cellSize={props.cellSize} className={"cell"} key={el}/>
-      })
-    } else {
-        localCells[props.snake] = <Cell cellSize={props.cellSize} className={"cell-snake"} key={props.snake}/>
+      setCells(localCells);
     }
-
-    if (typeof (prevFood) !== "undefined") {
-      localCells[prevFood] = <Cell cellSize={props.cellSize} className={"cell"} key={prevFood}/>
-    }
-    localCells[props.food] = <Cell cellSize={props.cellSize} className={"cell-food"} key={props.food}/>
-
-    setCells(localCells);
-  }, [props.snake, props.food])
+  }, [props.changedGridItems])
 
   return (
     <div className="grid"
-         style={{width: props.width + "px", height: props.height + "px"}}>
+      style={{width: props.width + "px", height: props.height + "px"}}>
       {cells}
     </div>
   )
