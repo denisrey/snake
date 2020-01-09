@@ -16,13 +16,15 @@ const Grid = props => {
   const [cells, setCells] = useState([]);
 
   const prevSnakeRef = useRef();
+  const prevFoodRef = useRef();
   useEffect(() => {
     prevSnakeRef.current = props.snake;
+    prevFoodRef.current = props.food;
   });
   const prevSnake = prevSnakeRef.current;
+  const prevFood = prevFoodRef.current;
 
   useEffect(() => {
-    console.log("use effect first time");
     setCells(createInitialCells());
   }, []);
 
@@ -34,19 +36,27 @@ const Grid = props => {
     }
     const localCells = [...cells]
 
-    props.snake.forEach((el) => {
-      localCells[el] = <Cell cellSize={props.cellSize} className={"cell-snake"} key={el}/>
-    })
-
+    //paint current snake
     if (typeof (prevSnake) !== "undefined") {
+      props.snake.filter(n => !prevSnake.includes(n)).forEach((el) => {
+        localCells[el] = <Cell cellSize={props.cellSize} className={"cell-snake"} key={el}/>
+      })
+
+      //unpaint old snake minus new snake
       prevSnake.filter(n => !props.snake.includes(n)).forEach((el) => {
         localCells[el] = <Cell cellSize={props.cellSize} className={"cell"} key={el}/>
       })
+    } else {
+        localCells[props.snake] = <Cell cellSize={props.cellSize} className={"cell-snake"} key={props.snake}/>
+    }
+
+    if (typeof (prevFood) !== "undefined") {
+      localCells[prevFood] = <Cell cellSize={props.cellSize} className={"cell"} key={prevFood}/>
     }
     localCells[props.food] = <Cell cellSize={props.cellSize} className={"cell-food"} key={props.food}/>
 
     setCells(localCells);
-  }, [props.snake])
+  }, [props.snake, props.food])
 
   return (
     <div className="grid"

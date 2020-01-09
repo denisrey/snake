@@ -128,7 +128,9 @@ class App extends Component {
       this.setState({ snake: snake })
     } else {
       //Game Over
-      this.setState({ gameStatus: gameStatus.ENDED });
+      this.setState({
+        gameStatus: gameStatus.ENDED
+      });
       clearInterval(this.interval);
     }
 
